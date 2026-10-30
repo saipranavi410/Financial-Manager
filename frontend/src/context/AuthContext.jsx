@@ -8,53 +8,85 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user credentials stored locally
     const storedUser = localStorage.getItem('user');
     const token = localStorage.getItem('token');
-    
+
     if (storedUser && token) {
       setUser(JSON.parse(storedUser));
     }
+
     setLoading(false);
 
-    // Listen to logouts from API response errors
     const handleLogoutEvent = () => {
       setUser(null);
     };
+
     window.addEventListener('auth-logout', handleLogoutEvent);
-    return () => window.removeEventListener('auth-logout', handleLogoutEvent);
+
+    return () => {
+      window.removeEventListener('auth-logout', handleLogoutEvent);
+    };
   }, []);
 
+  // Login
   const login = async (username, password) => {
     try {
-      const response = await api.post('/auth/login', { username, password });
+      const response = await api.post('/auth/login', {
+        username,
+        password,
+      });
+
       const { token, email } = response.data;
-      
-      const userData = { username, email };
+
+      const userData = {
+        username,
+        email,
+      };
+
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(userData));
+
       setUser(userData);
-      return { success: true };
+
+      return {
+        success: true,
+      };
     } catch (err) {
-      return { 
-        success: false, 
-        message: err.response?.data?.message || 'Invalid username or password' 
+      return {
+        success: false,
+        message:
+          err.response?.data?.message ||
+          err.response?.data ||
+          'Invalid username or password',
       };
     }
   };
 
+  // Signup
   const signup = async (username, email, password) => {
     try {
-      await api.post('/auth/signup', { username, email, password });
-      return { success: true };
+      const response = await api.post('/auth/signup', {
+        username,
+        email,
+        password,
+      });
+
+      return {
+        success: true,
+        data: response.data,
+      };
     } catch (err) {
-      return { 
-        success: false, 
-        message: err.response?.data?.message || 'Registration failed' 
+      return {
+        success: false,
+        message:
+          err.response?.data?.message ||
+          err.response?.data ||
+          'Registration failed',
       };
     }
   };
 
+  // Logout
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -62,7 +94,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, signup, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        login,
+        signup,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

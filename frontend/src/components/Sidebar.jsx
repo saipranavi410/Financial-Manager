@@ -1,15 +1,15 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { 
-  LayoutDashboard, 
-  CreditCard, 
-  ArrowLeftRight, 
-  PieChart, 
-  LogOut, 
-  Coins,
+import {
+  LayoutDashboard,
+  CreditCard,
+  ArrowLeftRight,
+  PieChart,
+  LogOut,
+  Wallet,
   Tag,
-  Percent
+  Percent,
 } from 'lucide-react';
 
 const Sidebar = () => {
@@ -27,13 +27,19 @@ const Sidebar = () => {
   return (
     <div style={styles.sidebar}>
       <div style={styles.brand}>
-        <Coins size={32} color="var(--accent-primary)" />
-        <span style={styles.brandText}>Vantage Finance</span>
+        <Wallet size={32} color="var(--accent-primary)" />
+
+        <span style={styles.brandText}>
+          Finance
+          <br />
+          Manager
+        </span>
       </div>
 
       <nav style={styles.nav}>
         {menuItems.map((item) => {
           const Icon = item.icon;
+
           return (
             <NavLink
               key={item.name}
@@ -45,9 +51,9 @@ const Sidebar = () => {
             >
               {({ isActive }) => (
                 <>
-                  <Icon 
-                    size={20} 
-                    color={isActive ? 'white' : 'var(--text-secondary)'} 
+                  <Icon
+                    size={20}
+                    color={isActive ? '#fff' : 'var(--text-secondary)'}
                     style={styles.icon}
                   />
                   <span>{item.name}</span>
@@ -64,11 +70,13 @@ const Sidebar = () => {
             <div style={styles.avatar}>
               {user.username.charAt(0).toUpperCase()}
             </div>
+
             <div style={styles.userInfo}>
               <span style={styles.username}>{user.username}</span>
               <span style={styles.email}>{user.email}</span>
             </div>
           </div>
+
           <button onClick={logout} style={styles.logoutBtn}>
             <LogOut size={18} style={styles.icon} />
             <span>Logout</span>
@@ -82,60 +90,70 @@ const Sidebar = () => {
 const styles = {
   sidebar: {
     width: '260px',
-    height: 'calc(100vh - 2rem)',
+    height: '100vh',
+    overflowY: 'auto',
     background: 'var(--bg-glass)',
     backdropFilter: 'blur(25px)',
     border: '1px solid var(--border-glass)',
     position: 'fixed',
-    top: '1rem',
-    left: '1rem',
-    borderRadius: '24px',
+    top: '0',
+    left: '0',
+    borderRadius: '0 24px 24px 0',
     boxShadow: 'var(--shadow-premium)',
     display: 'flex',
     flexDirection: 'column',
-    padding: '2.25rem 1.5rem',
+    padding: '2rem 1.5rem',
     zIndex: 100,
   },
+
   brand: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     gap: '0.75rem',
     marginBottom: '3rem',
   },
+
   brandText: {
-    fontSize: '1.25rem',
-    fontWeight: 700,
-    letterSpacing: '0.5px',
-    background: 'linear-gradient(to right, var(--text-primary), var(--accent-secondary))',
+    fontSize: '1.4rem',
+    fontWeight: '700',
+    lineHeight: '1.2',
+    display: 'block',
+    background:
+      'linear-gradient(to right, var(--text-primary), var(--accent-secondary))',
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
   },
+
   nav: {
     display: 'flex',
     flexDirection: 'column',
     gap: '0.5rem',
     flex: 1,
   },
+
   navLink: {
     display: 'flex',
     alignItems: 'center',
     gap: '1rem',
-    padding: '0.75rem 1rem',
+    padding: '0.85rem 1rem',
     color: 'var(--text-secondary)',
     textDecoration: 'none',
-    borderRadius: '10px',
+    borderRadius: '12px',
     fontSize: '0.95rem',
-    fontWeight: 500,
-    transition: 'var(--transition-smooth)',
+    fontWeight: '500',
+    transition: '0.3s',
   },
+
   navLinkActive: {
-    background: 'linear-gradient(135deg, var(--accent-primary) 0%, #047857 100%)',
-    color: 'white',
-    boxShadow: '0 8px 20px var(--accent-primary-glow)',
+    background: 'linear-gradient(135deg, #10b981, #047857)',
+    color: '#fff',
+    boxShadow: '0 8px 20px rgba(16,185,129,0.4)',
   },
+
   icon: {
-    transition: 'var(--transition-smooth)',
+    transition: '0.3s',
   },
+
   footer: {
     marginTop: 'auto',
     borderTop: '1px solid var(--border-glass)',
@@ -144,53 +162,58 @@ const styles = {
     flexDirection: 'column',
     gap: '1rem',
   },
+
   userProfile: {
     display: 'flex',
     alignItems: 'center',
     gap: '0.75rem',
   },
+
   avatar: {
     width: '40px',
     height: '40px',
     borderRadius: '50%',
-    background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))',
+    background: 'linear-gradient(135deg,#10b981,#34d399)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: 'white',
-    fontWeight: 700,
+    color: '#fff',
+    fontWeight: '700',
   },
+
   userInfo: {
     display: 'flex',
     flexDirection: 'column',
     maxWidth: '150px',
   },
+
   username: {
-    fontWeight: 600,
+    fontWeight: '600',
     fontSize: '0.9rem',
     color: 'var(--text-primary)',
   },
+
   email: {
     fontSize: '0.75rem',
     color: 'var(--text-muted)',
-    textOverflow: 'ellipsis',
     overflow: 'hidden',
+    textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
+
   logoutBtn: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     gap: '0.5rem',
-    padding: '0.6rem',
-    background: 'rgba(239, 68, 68, 0.08)',
-    border: '1px solid rgba(239, 68, 68, 0.2)',
-    color: 'var(--danger)',
-    borderRadius: '8px',
+    padding: '0.7rem',
+    background: 'rgba(239,68,68,0.08)',
+    border: '1px solid rgba(239,68,68,0.2)',
+    color: '#ef4444',
+    borderRadius: '10px',
     cursor: 'pointer',
-    fontSize: '0.85rem',
-    fontWeight: 600,
-    transition: 'var(--transition-smooth)',
+    fontSize: '0.9rem',
+    fontWeight: '600',
   },
 };
 
